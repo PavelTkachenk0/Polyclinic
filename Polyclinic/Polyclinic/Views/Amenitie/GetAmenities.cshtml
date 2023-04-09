@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Polyclinic.Domain.Models.Amenitie>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+@foreach(var amenitie in Model)
+{
+    <p>amenitie.Id</p>
+    <p>amenitie.Name</p>
+    <p>amenitie.Description</p>
+    <p>amenitie.StartOfReception</p>
+    <p>amenitie.EndOfReception</p>
+}
