@@ -1,4 +1,5 @@
 ﻿using Polyclinic.DAL.Interfaces;
+using Polyclinic.Domain.AmenitieViewModel;
 using Polyclinic.Domain.Enum;
 using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
@@ -16,7 +17,7 @@ public class AmenitieService : IAmenitieService
         _amenitieRepository = amenitieRepository;
     }
 
-    public async Task<IBaseResponce<Amenitie>> CreateAmenitie(Amenitie amenitie)
+    public async Task<IBaseResponce<Amenitie>> CreateAmenitie(AmenitieViewModel amenitie)
     {
     var baseResponce = new BaseResponce<Amenitie>(); 
         try

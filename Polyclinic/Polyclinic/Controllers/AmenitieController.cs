@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Polyclinic.Domain.AmenitieViewModel;
 using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
+using Polyclinic.Domain.Responce;
 using Polyclinic.Service.Interfaces;
 //контроллер услуг
 namespace Polyclinic.Controllers;
@@ -38,18 +40,18 @@ public class AmenitieController : Controller
 
     //[Authorize(Roles = "Admin")]
     [HttpDelete("Delete")]
-    public async Task<IBaseResponce<bool>> DeleteAmenitie(int id)
+    public async Task<IActionResult> DeleteAmenitie(int id)
     {
         var response = await _amenitieService.DeleteAmenitie(id);
-        return response;
+        return Ok();
     }
 
     //[Authorize(Roles = "Admin")]
     [HttpPost("Create")]
 
-    public async Task<Amenitie> CreateAmenitie([FromBody]Amenitie amenitie)
+    public async Task<IActionResult> CreateAmenitie([FromBody]AmenitieViewModel amenitie)
     {
         var responce = await _amenitieService.CreateAmenitie(amenitie);
-        return responce.Data;
+        return Ok();
     }
 }
