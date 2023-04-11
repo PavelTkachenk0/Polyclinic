@@ -3,8 +3,7 @@ using Polyclinic.Domain.Enum;
 using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
 using Polyclinic.Domain.Responce;
-using Polyclinic.Domain.ViewModels;
-using Polyclinic.Service.Interfaces;    
+using Polyclinic.Service.Interfaces;
 //реализуем обработку данных об услугах из БД
 namespace Polyclinic.Service.Implementations;
 
@@ -17,24 +16,24 @@ public class AmenitieService : IAmenitieService
         _amenitieRepository = amenitieRepository;
     }
 
-    public async Task<IBaseResponce<AmenitieViewModel>> CreateAmenitie(AmenitieViewModel amenitieViewModel)//добавить услугу
+    public async Task<IBaseResponce<Amenitie>> CreateAmenitie(Amenitie amenitie)
     {
-        var baseResponce = new BaseResponce<AmenitieViewModel>(); 
+    var baseResponce = new BaseResponce<Amenitie>(); 
         try
         {
-            var amenitie = new Amenitie()//инициализация услуги
+            var NewAmenitie = new Amenitie()//инициализация услуги
             {
-                Name = amenitieViewModel.Name,
-                Description = amenitieViewModel.Description,
-                StartOfReception = DateTime.Now,
-                EndOfReception = DateTime.Now
+                Name = amenitie.Name,
+                Description = amenitie.Description,
+                StartOfReception = amenitie.StartOfReception,
+                EndOfReception = amenitie.EndOfReception
             };
 
-            await _amenitieRepository.Create(amenitie);//создание 
+            await _amenitieRepository.Create(NewAmenitie);//создание 
         }
         catch (Exception ex)
         {
-            return new BaseResponce<AmenitieViewModel>()
+            return new BaseResponce<Amenitie>()
             {
                 Description = $"[CreateAmenitie] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -102,17 +101,34 @@ public class AmenitieService : IAmenitieService
             };
         }
     }
-
-    public async Task<IEnumerable<Amenitie>> GetAmenties()//получить список услуг 
+    public async Task<IBaseResponce<IEnumerable<Amenitie>>> GetAmenities()//получить список услуг 
     {
+        var baseResponce = new BaseResponce<IEnumerable<Amenitie>>();
         try
         {
             var amenities = await _amenitieRepository.GetAll();//получаем все объекты из таблицы 
-            return amenities;
+
+            if(amenities.Count == 0)
+            {
+                baseResponce.Description = "Elements not found";
+                baseResponce.StatusCode = StatusCode.NotFound;
+                return baseResponce;
+            }
+            else
+            {
+                baseResponce.Data = amenities;
+                baseResponce.StatusCode = StatusCode.OK;
+
+                return baseResponce;
+            }
         }
         catch (Exception ex)//обработка ошибки
         {
-            return null;
+            return new BaseResponce<IEnumerable<Amenitie>>()
+            {
+                Description = $"[GetAmenities] : {ex.Message}",
+                StatusCode = StatusCode.InternalServerError
+            };
         }
     }
 

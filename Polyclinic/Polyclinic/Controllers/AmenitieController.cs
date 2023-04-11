@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
 using Polyclinic.Service.Interfaces;
 //контроллер услуг
@@ -14,10 +15,41 @@ public class AmenitieController : Controller
         _amenitieService = amenitieService;
     }
     
-    [HttpGet]
+    [HttpGet("GetAll")]
     public async Task<IEnumerable<Amenitie>> GetAmenities() //получение всех данных
+    {   
+        var response = await _amenitieService.GetAmenities();
+        return response.Data;
+    }
+
+    [HttpGet("GetByName")]
+    public async Task<Amenitie> GetAmenitieByName(string name)
     {
-        var responce = await _amenitieService.GetAmenties();
-        return responce;
-    }   
+        var response = await _amenitieService.GetAmenitieByName(name);
+        return response.Data;
+    }
+
+    [HttpGet("GetById")]
+    public async Task<Amenitie> GetAmenitieById(int id)
+    {
+        var response = await _amenitieService.GetAmenitieById(id);
+        return response.Data;
+    }
+
+    //[Authorize(Roles = "Admin")]
+    [HttpDelete("Delete")]
+    public async Task<IBaseResponce<bool>> DeleteAmenitie(int id)
+    {
+        var response = await _amenitieService.DeleteAmenitie(id);
+        return response;
+    }
+
+    //[Authorize(Roles = "Admin")]
+    [HttpPost("Create")]
+
+    public async Task<Amenitie> CreateAmenitie([FromBody]Amenitie amenitie)
+    {
+        var responce = await _amenitieService.CreateAmenitie(amenitie);
+        return responce.Data;
+    }
 }

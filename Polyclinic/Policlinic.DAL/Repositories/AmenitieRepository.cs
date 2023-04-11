@@ -17,7 +17,7 @@ public class AmenitieRepository : IAmenitieRepository
     {
        await _db.Amenitie.AddAsync(entity);
        await _db.SaveChangesAsync();
-        return true;
+       return true;
     }
 
     public async Task<bool> Delete(Amenitie entity)//удаление обычекта из БД
@@ -32,7 +32,7 @@ public class AmenitieRepository : IAmenitieRepository
         return await _db.Amenitie.FirstOrDefaultAsync(x => x.Id == id);//возвращает первое найденное значение, удовлетворяющее условию(id)
     }
 
-    public async Task<List<Amenitie>> GetAll() //получение списка автомобилей в коллекцию List
+    public async Task<List<Amenitie>> GetAll() //получение списка услуг в коллекцию List
     {
         return await _db.Amenitie.ToListAsync();
     }
