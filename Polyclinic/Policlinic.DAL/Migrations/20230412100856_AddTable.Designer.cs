@@ -12,8 +12,8 @@ using Polyclinic.DAL;
 namespace Polyclinic.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230407203414_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20230412100856_AddTable")]
+    partial class AddTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,35 @@ namespace Polyclinic.DAL.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Amenitie");
+                });
+
+            modelBuilder.Entity("Polyclinic.Domain.Models.Doctor", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Specialization")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Doctor");
                 });
 #pragma warning restore 612, 618
         }

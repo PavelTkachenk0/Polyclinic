@@ -4,12 +4,8 @@ using Polyclinic.Domain.Models;
 
 namespace Polyclinic.Service.Interfaces;
 //слой отвечает за получение и обработку данных об услугах из БД
-public interface IAmenitieService
+public interface IAmenitieService : IService<Amenitie, AmenitieViewModel>
 {
-    Task<IBaseResponce<Amenitie>> GetAmenitieByName(string name);
-    Task<IBaseResponce<IEnumerable<Amenitie>>> GetAmenities(); 
-    Task<IBaseResponce<Amenitie>> GetAmenitieById(int id);
-    Task<IBaseResponce<bool>> DeleteAmenitie(int id);
-    Task<IBaseResponce<Amenitie>> CreateAmenitie(AmenitieViewModel amenitie);
+    Task<IBaseResponce<Amenitie>> GetByName(string name);
 
 }

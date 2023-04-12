@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Polyclinic.Domain.AmenitieViewModel;
-using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
-using Polyclinic.Domain.Responce;
 using Polyclinic.Service.Interfaces;
 //контроллер услуг
 namespace Polyclinic.Controllers;
@@ -20,21 +18,21 @@ public class AmenitieController : Controller
     [HttpGet("GetAll")]
     public async Task<IEnumerable<Amenitie>> GetAmenities() //получение всех данных
     {   
-        var response = await _amenitieService.GetAmenities();
+        var response = await _amenitieService.GetAll();
         return response.Data;
     }
 
     [HttpGet("GetByName")]
     public async Task<Amenitie> GetAmenitieByName(string name)
     {
-        var response = await _amenitieService.GetAmenitieByName(name);
+        var response = await _amenitieService.GetByName(name);
         return response.Data;
     }
 
     [HttpGet("GetById")]
     public async Task<Amenitie> GetAmenitieById(int id)
     {
-        var response = await _amenitieService.GetAmenitieById(id);
+        var response = await _amenitieService.GetById(id);
         return response.Data;
     }
 
@@ -42,7 +40,7 @@ public class AmenitieController : Controller
     [HttpDelete("Delete")]
     public async Task<IActionResult> DeleteAmenitie(int id)
     {
-        var response = await _amenitieService.DeleteAmenitie(id);
+        var response = await _amenitieService.Delete(id);
         return Ok();
     }
 
@@ -51,7 +49,7 @@ public class AmenitieController : Controller
 
     public async Task<IActionResult> CreateAmenitie([FromBody]AmenitieViewModel amenitie)
     {
-        var responce = await _amenitieService.CreateAmenitie(amenitie);
+        var responce = await _amenitieService.Create(amenitie);
         return Ok();
     }
 }

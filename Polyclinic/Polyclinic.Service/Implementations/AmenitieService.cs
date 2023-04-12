@@ -17,7 +17,7 @@ public class AmenitieService : IAmenitieService
         _amenitieRepository = amenitieRepository;
     }
 
-    public async Task<IBaseResponce<Amenitie>> CreateAmenitie(AmenitieViewModel amenitie)
+    public async Task<IBaseResponce<Amenitie>> Create(AmenitieViewModel amenitie)
     {
     var baseResponce = new BaseResponce<Amenitie>(); 
         try
@@ -43,7 +43,7 @@ public class AmenitieService : IAmenitieService
         return baseResponce;
     }
 
-    public async Task<IBaseResponce<Amenitie>> GetAmenitieById(int id)//получить услугу по id
+    public async Task<IBaseResponce<Amenitie>> GetById(int id)//получить услугу по id
     {
         var baseResponce = new BaseResponce<Amenitie>();
         try
@@ -52,7 +52,7 @@ public class AmenitieService : IAmenitieService
             if(amenitie == null)//проверяем на ненулевое значение
             {
                 baseResponce.Description = "Amenitie not found";
-                baseResponce.StatusCode = StatusCode.AmenitieNotFound;
+                baseResponce.StatusCode = StatusCode.NotFound;
 
                 return baseResponce;
             }
@@ -73,7 +73,7 @@ public class AmenitieService : IAmenitieService
         }
     }
 
-    public async Task<IBaseResponce<Amenitie>> GetAmenitieByName(string name)//получить услугу по имени
+    public async Task<IBaseResponce<Amenitie>> GetByName(string name)//получить услугу по имени
     {
         var baseResponce = new BaseResponce<Amenitie>();
         try
@@ -82,7 +82,7 @@ public class AmenitieService : IAmenitieService
             if (amenitie == null)
             {
                 baseResponce.Description = "Amenitie not found";
-                baseResponce.StatusCode = StatusCode.AmenitieNotFound;
+                baseResponce.StatusCode = StatusCode.NotFound;
 
                 return baseResponce;
             }
@@ -102,7 +102,7 @@ public class AmenitieService : IAmenitieService
             };
         }
     }
-    public async Task<IBaseResponce<IEnumerable<Amenitie>>> GetAmenities()//получить список услуг 
+    public async Task<IBaseResponce<IEnumerable<Amenitie>>> GetAll()//получить список услуг 
     {
         var baseResponce = new BaseResponce<IEnumerable<Amenitie>>();
         try
@@ -133,7 +133,7 @@ public class AmenitieService : IAmenitieService
         }
     }
 
-    public async Task<IBaseResponce<bool>> DeleteAmenitie(int id)//удаление услуги 
+    public async Task<IBaseResponce<bool>> Delete(int id)//удаление услуги 
     {
         var baseResponce = new BaseResponce<bool>();
         try
@@ -142,7 +142,7 @@ public class AmenitieService : IAmenitieService
             if (amenitie == null)//проверяем на ненулевое значение
             {
                 baseResponce.Description = "Amenitie not found";
-                baseResponce.StatusCode = StatusCode.AmenitieNotFound;
+                baseResponce.StatusCode = StatusCode.NotFound;
 
                 return baseResponce;
             }
@@ -157,7 +157,7 @@ public class AmenitieService : IAmenitieService
         {
             return new BaseResponce<bool>()
             {
-                Description = $"[DeleteCar] : {ex.Message}",
+                Description = $"[DeleteAmenitie] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
