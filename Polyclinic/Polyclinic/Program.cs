@@ -18,8 +18,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //подключаем необходимые библиотеки в проект
 builder.Services.AddScoped<IAmenitieRepository, AmenitieRepository>();
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+
 builder.Services.AddScoped<IAmenitieService, AmenitieService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 builder.Services.AddSwaggerGen();
 
