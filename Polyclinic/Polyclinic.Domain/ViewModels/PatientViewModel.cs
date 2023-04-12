@@ -1,5 +1,5 @@
 ﻿namespace Polyclinic.Domain.ViewModels;
-public class Patient
+public class PatientViewModel
 {
     public int Id { get; set; }
 

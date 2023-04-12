@@ -15,21 +15,21 @@ public class AmenitieController : Controller
         _amenitieService = amenitieService;
     }
     
-    [HttpGet("GetAll")]
+    [HttpGet("GetAllAmenities")]
     public async Task<IEnumerable<Amenitie>> GetAmenities() //получение всех данных
     {   
         var response = await _amenitieService.GetAll();
         return response.Data;
     }
 
-    [HttpGet("GetByName")]
+    [HttpGet("GetAmenitieByName")]
     public async Task<Amenitie> GetAmenitieByName(string name)
     {
         var response = await _amenitieService.GetByName(name);
         return response.Data;
     }
 
-    [HttpGet("GetById")]
+    [HttpGet("GetAmenitieById")]
     public async Task<Amenitie> GetAmenitieById(int id)
     {
         var response = await _amenitieService.GetById(id);
@@ -37,7 +37,7 @@ public class AmenitieController : Controller
     }
 
     //[Authorize(Roles = "Admin")]
-    [HttpDelete("Delete")]
+    [HttpDelete("DeleteAmenitie")]
     public async Task<IActionResult> DeleteAmenitie(int id)
     {
         var response = await _amenitieService.Delete(id);
@@ -45,7 +45,7 @@ public class AmenitieController : Controller
     }
 
     //[Authorize(Roles = "Admin")]
-    [HttpPost("Create")]
+    [HttpPost("CreateAmenitie")]
 
     public async Task<IActionResult> CreateAmenitie([FromBody]AmenitieViewModel amenitie)
     {

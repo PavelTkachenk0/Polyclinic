@@ -16,21 +16,21 @@ public class DoctorController : Controller
         _doctorService = doctorService;
     }
 
-    [HttpGet("GetAll")]
+    [HttpGet("GetAllDoctors")]
     public async Task<IEnumerable<Doctor>> GetDoctors() //получение всех данных
     {
         var response = await _doctorService.GetAll();
         return response.Data;
     }
 
-    [HttpGet("GetByName")]
+    [HttpGet("GetDoctorByName")]
     public async Task<Doctor> GetDoctorBySurame(string surname)
     {
         var response = await _doctorService.GetBySurame(surname);
         return response.Data;
     }
 
-    [HttpGet("GetById")]
+    [HttpGet("GetDoctorById")]
     public async Task<Doctor> GetDoctorById(int id)
     {
         var response = await _doctorService.GetById(id);
@@ -38,7 +38,7 @@ public class DoctorController : Controller
     }
 
     //[Authorize(Roles = "Admin")]
-    [HttpDelete("Delete")]
+    [HttpDelete("DeleteDoctors")]
     public async Task<IActionResult> DeleteDoctor(int id)
     {
         var response = await _doctorService.Delete(id);
@@ -46,7 +46,7 @@ public class DoctorController : Controller
     }
 
     //[Authorize(Roles = "Admin")]
-    [HttpPost("Create")]
+    [HttpPost("CreateDoctors")]
 
     public async Task<IActionResult> CreateDoctor([FromBody] DoctorViewModel doctor)
     {

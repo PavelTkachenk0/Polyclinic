@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Polyclinic.Domain.Interfaces;
+using Polyclinic.Domain.Models;
+using Polyclinic.Domain.ViewModels;
 
-namespace Polyclinic.Service.Interfaces
+namespace Polyclinic.Service.Interfaces;
+
+public interface IPatientService : IService<Patient, PatientViewModel>
 {
-    internal interface IPatientService
-    {
-    }
+    Task<IBaseResponce<Patient>> GetByPhoneNumber(string phoneNimber);
+
+    Task<IBaseResponce<Patient>> GetBySNILS(string snils);
 }

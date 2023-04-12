@@ -41,8 +41,8 @@ public class DoctorRepository : IDoctorRepository
         return await _db.Doctor.FirstOrDefaultAsync(x => x.Surname == surname);
     }
 
-    public Task<Doctor> GetBySpecialization(string spesialization)
+    public async Task<Doctor> GetBySpecialization(string spesialization)
     {
-        throw new NotImplementedException();
+        return await _db.Doctor.FirstOrDefaultAsync(x => x.Specialization == spesialization);
     }
 }
