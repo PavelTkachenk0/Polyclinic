@@ -1,10 +1,10 @@
 ﻿using Polyclinic.DAL.Interfaces;
+using Polyclinic.Domain.AmenitieViewModel;
 using Polyclinic.Domain.Enum;
 using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
 using Polyclinic.Domain.Responce;
-using Polyclinic.Domain.ViewModels;
-using Polyclinic.Service.Interfaces;    
+using Polyclinic.Service.Interfaces;
 //реализуем обработку данных об услугах из БД
 namespace Polyclinic.Service.Implementations;
 
@@ -17,24 +17,24 @@ public class AmenitieService : IAmenitieService
         _amenitieRepository = amenitieRepository;
     }
 
-    public async Task<IBaseResponce<AmenitieViewModel>> CreateAmenitie(AmenitieViewModel amenitieViewModel)//добавить услугу
+    public async Task<IBaseResponce<Amenitie>> Create(AmenitieViewModel amenitie)
     {
-        var baseResponce = new BaseResponce<AmenitieViewModel>(); 
+    var baseResponce = new BaseResponce<Amenitie>(); 
         try
         {
-            var amenitie = new Amenitie()//инициализация услуги
+            var NewAmenitie = new Amenitie()//инициализация услуги
             {
-                Name = amenitieViewModel.Name,
-                Description = amenitieViewModel.Description,
-                StartOfReception = DateTime.Now,
-                EndOfReception = DateTime.Now
+                Name = amenitie.Name,
+                Description = amenitie.Description,
+                StartOfReception = amenitie.StartOfReception,
+                EndOfReception = amenitie.EndOfReception
             };
 
-            await _amenitieRepository.Create(amenitie);//создание 
+            await _amenitieRepository.Create(NewAmenitie);//создание 
         }
         catch (Exception ex)
         {
-            return new BaseResponce<AmenitieViewModel>()
+            return new BaseResponce<Amenitie>()
             {
                 Description = $"[CreateAmenitie] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -43,7 +43,7 @@ public class AmenitieService : IAmenitieService
         return baseResponce;
     }
 
-    public async Task<IBaseResponce<Amenitie>> GetAmenitieById(int id)//получить услугу по id
+    public async Task<IBaseResponce<Amenitie>> GetById(int id)//получить услугу по id
     {
         var baseResponce = new BaseResponce<Amenitie>();
         try
@@ -52,7 +52,7 @@ public class AmenitieService : IAmenitieService
             if(amenitie == null)//проверяем на ненулевое значение
             {
                 baseResponce.Description = "Amenitie not found";
-                baseResponce.StatusCode = StatusCode.AmenitieNotFound;
+                baseResponce.StatusCode = StatusCode.NotFound;
 
                 return baseResponce;
             }
@@ -73,7 +73,7 @@ public class AmenitieService : IAmenitieService
         }
     }
 
-    public async Task<IBaseResponce<Amenitie>> GetAmenitieByName(string name)//получить услугу по имени
+    public async Task<IBaseResponce<Amenitie>> GetByName(string name)//получить услугу по имени
     {
         var baseResponce = new BaseResponce<Amenitie>();
         try
@@ -82,7 +82,7 @@ public class AmenitieService : IAmenitieService
             if (amenitie == null)
             {
                 baseResponce.Description = "Amenitie not found";
-                baseResponce.StatusCode = StatusCode.AmenitieNotFound;
+                baseResponce.StatusCode = StatusCode.NotFound;
 
                 return baseResponce;
             }
@@ -102,21 +102,38 @@ public class AmenitieService : IAmenitieService
             };
         }
     }
-
-    public async Task<IEnumerable<Amenitie>> GetAmenties()//получить список услуг 
+    public async Task<IBaseResponce<IEnumerable<Amenitie>>> GetAll()//получить список услуг 
     {
+        var baseResponce = new BaseResponce<IEnumerable<Amenitie>>();
         try
         {
             var amenities = await _amenitieRepository.GetAll();//получаем все объекты из таблицы 
-            return amenities;
+
+            if(amenities.Count == 0)
+            {
+                baseResponce.Description = "Elements not found";
+                baseResponce.StatusCode = StatusCode.NotFound;
+                return baseResponce;
+            }
+            else
+            {
+                baseResponce.Data = amenities;
+                baseResponce.StatusCode = StatusCode.OK;
+
+                return baseResponce;
+            }
         }
         catch (Exception ex)//обработка ошибки
         {
-            return null;
+            return new BaseResponce<IEnumerable<Amenitie>>()
+            {
+                Description = $"[GetAmenities] : {ex.Message}",
+                StatusCode = StatusCode.InternalServerError
+            };
         }
     }
 
-    public async Task<IBaseResponce<bool>> DeleteAmenitie(int id)//удаление услуги 
+    public async Task<IBaseResponce<bool>> Delete(int id)//удаление услуги 
     {
         var baseResponce = new BaseResponce<bool>();
         try
@@ -125,7 +142,7 @@ public class AmenitieService : IAmenitieService
             if (amenitie == null)//проверяем на ненулевое значение
             {
                 baseResponce.Description = "Amenitie not found";
-                baseResponce.StatusCode = StatusCode.AmenitieNotFound;
+                baseResponce.StatusCode = StatusCode.NotFound;
 
                 return baseResponce;
             }
@@ -140,7 +157,7 @@ public class AmenitieService : IAmenitieService
         {
             return new BaseResponce<bool>()
             {
-                Description = $"[DeleteCar] : {ex.Message}",
+                Description = $"[DeleteAmenitie] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }

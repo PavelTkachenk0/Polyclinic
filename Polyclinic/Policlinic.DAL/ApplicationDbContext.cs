@@ -12,4 +12,5 @@ public class ApplicationDbContext : DbContext
     }
 
     public DbSet<Amenitie> Amenitie { get; set; }//сущность для получения данных из таблицы услуг
+    public DbSet<Doctor> Doctor { get; set; }
 }
