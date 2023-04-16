@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyclinic.DAL", "Policlini
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Service", "Service", "{E1971AD3-84E5-44E4-B9FF-3285FD106656}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Polyclinic.Service", "Polyclinic.Service\Polyclinic.Service.csproj", "{896B5274-FA52-48DC-A00F-914CD7DEDB9B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Polyclinic.Service", "Polyclinic.Service\Polyclinic.Service.csproj", "{896B5274-FA52-48DC-A00F-914CD7DEDB9B}"
 	ProjectSection(ProjectDependencies) = postProject
 		{817E3F7F-9540-4C7D-A70F-ACB7D99B2FF2} = {817E3F7F-9540-4C7D-A70F-ACB7D99B2FF2}
 	EndProjectSection

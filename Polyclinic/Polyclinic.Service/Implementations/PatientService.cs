@@ -1,4 +1,6 @@
-﻿using Polyclinic.DAL.Interfaces;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Polyclinic.DAL.Interfaces;
 using Polyclinic.Domain.Enum;
 using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
@@ -8,6 +10,7 @@ using Polyclinic.Service.Interfaces;
 
 namespace Polyclinic.Service.Implementations;
 
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class PatientService : IPatientService
 {
     private readonly IPatientRepository _patientRepository;//создаем объект репозитория
