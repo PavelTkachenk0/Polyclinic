@@ -26,7 +26,7 @@ public class IdentityController : Controller
         });
         }
 
-        var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
+        var authResponse = await _identityService.RegisterAsync(request.Email, request.Password);
 
         if (!authResponse.Success)
         {
@@ -43,7 +43,7 @@ public class IdentityController : Controller
 
     [HttpPost("Login")]
 
-    public async Task<IActionResult> Lodin([FromBody]UserLoginRequest request)
+    public async Task<IActionResult> Login([FromBody]UserLoginRequest request)
     {
         var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
 
