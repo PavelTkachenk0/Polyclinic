@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Identity.Client;
 using Microsoft.IdentityModel.Tokens;
 using Polyclinic.Domain.Models;
 using Polyclinic.Domain.Settings;
@@ -52,6 +51,36 @@ public class IdentityService : IIdentityService
             };
         }
 
+        return GenerateAuthentificationResultForUser(newUser);
+    }
+
+    public async Task<AuthentificationResult> LoginAsync(string email, string password)
+    {
+        var user = await _userManager.FindByEmailAsync(email);
+
+        if(user == null) 
+        {
+            return new AuthentificationResult
+            {
+                Errors = new[] { "User does not exist" }
+            };
+        }
+
+        var userHasValidPassword = await _userManager.CheckPasswordAsync(user, password);
+
+        if (!userHasValidPassword)
+        {
+            return new AuthentificationResult
+            {
+                Errors = new[] { "User/password combination is wrong" }
+            };
+        }
+
+        return GenerateAuthentificationResultForUser(user);
+    }
+
+    public AuthentificationResult GenerateAuthentificationResultForUser(IdentityUser newUser)
+    {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.UTF8.GetBytes(_jwtSettings.Secret);
         var tokenDescriptor = new SecurityTokenDescriptor

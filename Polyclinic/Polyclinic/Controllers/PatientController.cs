@@ -1,9 +1,13 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Polyclinic.Domain.Models;
 using Polyclinic.Domain.ViewModels;
 using Polyclinic.Service.Interfaces;
 
 namespace Polyclinic.Controllers;
+
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 
 [Route("api/[controller]")]
 public class PatientController : Controller
