@@ -18,12 +18,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//соединяемся с базой данных
+//   
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connection));
 
 builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var jwtSettings = new JwtSettings();
@@ -79,7 +80,7 @@ builder.Services.AddSwaggerGen(x =>
                       Type = ReferenceType.SecurityScheme,
                       Id = "Bearer"
                  }
-                   
+
             },
             new string[] {}
         }
@@ -92,7 +93,7 @@ builder.Services.AddOptions();
 //builder.Configuration["JwtSettings"];
 //var jwtSettings = builder.Configuration.Get<JwtSettings>();
 
-//подключаем необходимые библиотеки в проект
+//    
 builder.Services.AddScoped<IAmenitieRepository, AmenitieRepository>();
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
@@ -108,6 +109,27 @@ var app = builder.Build();
 app.UseDeveloperExceptionPage();
 
 app.UseRouting();
+
+using (var serviceScope = app.Services.CreateScope())
+{
+    var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    if(! await roleManager.RoleExistsAsync("Admin"))
+    {
+        var adminRole = new IdentityRole("Admin");
+        await roleManager.CreateAsync(adminRole);
+    }
+
+    if(! await roleManager.RoleExistsAsync("User"))
+    {
+        var userRole = new IdentityRole("User");
+        await roleManager.CreateAsync(userRole);
+    }
+
+    //userManage..
+    //iF(await userManage....){
+    //набросить ролей
+}
 
 app.Configuration.Bind(nameof(jwtSettings), jwtSettings);
 
@@ -128,4 +150,4 @@ app.UseEndpoints(options =>
     options.MapDefaultControllerRoute();
 });
 
-app.Run();  
+app.Run();

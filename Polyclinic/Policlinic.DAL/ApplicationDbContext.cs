@@ -1,12 +1,10 @@
 ﻿using Polyclinic.Domain.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity;
-using Polyclinic.Domain.Enum;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace Polyclinic.DAL;
 //подключение базы данных в проект
-public class ApplicationDbContext : IdentityDbContext//<ApplicationUser, ApplicationRole, Guid>
+public class ApplicationDbContext : IdentityDbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -19,7 +17,5 @@ public class ApplicationDbContext : IdentityDbContext//<ApplicationUser, Applica
     public DbSet<Doctor> Doctor { get; set; }
 
     public DbSet<Patient> Patient { get; set; }
-
-   // public DbSet<User> User { get; set; }
 
 }

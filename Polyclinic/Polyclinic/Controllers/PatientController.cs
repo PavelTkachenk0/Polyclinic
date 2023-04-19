@@ -27,14 +27,21 @@ public class PatientController : Controller
     }
 
     [HttpGet("GetPatientByPhoneNumber")]
-    public async Task<Patient> GetDoctorByPhoneNumber(string phonenUmber)
+    public async Task<Patient> GetPatientByPhoneNumber(string phonenUmber)
     {
         var response = await _patientService.GetByPhoneNumber(phonenUmber);
         return response.Data;
     }
 
+    [HttpGet("GetPatientBySNILS")]
+    public async Task<Patient> GetPatientBySNILST(string snils)
+    {
+        var response = await _patientService.GetBySNILS(snils);
+        return response.Data;
+    }
+
     [HttpGet("GetPatientById")]
-    public async Task<Patient> GetDoctorById(int id)
+    public async Task<Patient> GetPatientById(int id)
     {
         var response = await _patientService.GetById(id);
         return response.Data;
@@ -42,7 +49,7 @@ public class PatientController : Controller
 
     //[Authorize(Roles = "Admin")]
     [HttpDelete("DeletePatient")]
-    public async Task<IActionResult> DeleteDoctor(int id)
+    public async Task<IActionResult> DeletePatient(int id)
     {
         var response = await _patientService.Delete(id);
         return Ok();
@@ -51,7 +58,7 @@ public class PatientController : Controller
     //[Authorize(Roles = "Admin")]
     [HttpPost("CreatePatient")]
 
-    public async Task<IActionResult> CreateDoctor([FromBody] PatientViewModel patient)
+    public async Task<IActionResult> CreatePatient([FromBody] PatientViewModel patient)
     {
         var responce = await _patientService.Create(patient);
         return Ok();
