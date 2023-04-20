@@ -12,7 +12,7 @@ public class ApplicationDbContext : IdentityDbContext
         //Database.EnsureCreated();
     }
 
-    public DbSet<Amenitie> Amenitie { get; set; }//сущность для получения данных из таблицы услуг
+    public DbSet<Amenitie> Amenitie { get; set; }
 
     public DbSet<Doctor> Doctor { get; set; }
 

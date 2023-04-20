@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Polyclinic.Domain.AmenitieViewModel;
-
+﻿namespace Polyclinic.Domain.AmenitieViewModel;
 public class AmenitieViewModel
 {
     public string Name { get; set; }

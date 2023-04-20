@@ -18,7 +18,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-//   
 var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connection));
@@ -87,13 +86,8 @@ builder.Services.AddSwaggerGen(x =>
     });
 });
 
-//builder.Services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
 builder.Services.AddOptions();
-
-//builder.Configuration["JwtSettings"];
-//var jwtSettings = builder.Configuration.Get<JwtSettings>();
-
-//    
+  
 builder.Services.AddScoped<IAmenitieRepository, AmenitieRepository>();
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
 builder.Services.AddScoped<IPatientRepository, PatientRepository>();
@@ -125,10 +119,6 @@ using (var serviceScope = app.Services.CreateScope())
         var userRole = new IdentityRole("User");
         await roleManager.CreateAsync(userRole);
     }
-
-    //userManage..
-    //iF(await userManage....){
-    //набросить ролей
 }
 
 app.Configuration.Bind(nameof(jwtSettings), jwtSettings);

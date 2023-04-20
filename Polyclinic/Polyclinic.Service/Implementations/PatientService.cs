@@ -137,7 +137,7 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<IBaseResponce<Patient>> GetByPhoneNumber(string phoneNumber)
+    public async Task<IBaseResponce<Patient>> GetByPhoneNumber(string phoneNumber)//получаем пациента по номеру телефона
     {
         var baseResponce = new BaseResponce<Patient>();
         try
@@ -167,7 +167,7 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<IBaseResponce<Patient>> GetBySNILS(string snils)
+    public async Task<IBaseResponce<Patient>> GetBySNILS(string snils)//получаем пациента по снилсу
     {
         var baseResponce = new BaseResponce<Patient>();
         try

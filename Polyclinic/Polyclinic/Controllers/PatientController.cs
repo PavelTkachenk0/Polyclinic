@@ -7,7 +7,7 @@ using Polyclinic.Service.Interfaces;
 
 namespace Polyclinic.Controllers;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
 
 [Route("api/[controller]")]
 public class PatientController : Controller
@@ -47,7 +47,6 @@ public class PatientController : Controller
         return response.Data;
     }
 
-    //[Authorize(Roles = "Admin")]
     [HttpDelete("DeletePatient")]
     public async Task<IActionResult> DeletePatient(int id)
     {
@@ -55,7 +54,6 @@ public class PatientController : Controller
         return Ok();
     }
 
-    //[Authorize(Roles = "Admin")]
     [HttpPost("CreatePatient")]
 
     public async Task<IActionResult> CreatePatient([FromBody] PatientViewModel patient)

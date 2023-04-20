@@ -136,7 +136,7 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<IBaseResponce<Doctor>> GetBySpecialization(string specialization)
+    public async Task<IBaseResponce<Doctor>> GetBySpecialization(string specialization)//получаем врача по специальности
     {
         var baseResponce = new BaseResponce<Doctor>();
         try
@@ -166,7 +166,7 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<IBaseResponce<Doctor>> GetBySurame(string surname)
+    public async Task<IBaseResponce<Doctor>> GetBySurame(string surname)//получаем врача по фамилии
     {
         var baseResponce = new BaseResponce<Doctor>();
         try

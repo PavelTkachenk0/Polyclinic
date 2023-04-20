@@ -57,7 +57,7 @@ public class IdentityService : IIdentityService
             _userManager.AddToRoleAsync(newUser, "Admin").Wait();
         }
 
-        if (_userManager.FindByEmailAsync("admin@gmail.com").Result != null)
+        else
         {
             var createdUser = await _userManager.CreateAsync(newUser, password);
             if (!createdUser.Succeeded)
