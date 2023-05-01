@@ -106,22 +106,22 @@ app.UseDeveloperExceptionPage();
 
 app.UseRouting();
 
-using (var serviceScope = app.Services.CreateScope())
-{
-    var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//using (var serviceScope = app.Services.CreateScope())
+//{
+//    var roleManager = serviceScope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    if (!await roleManager.RoleExistsAsync("Admin"))
-    {
-        var adminRole = new IdentityRole("Admin");
-        await roleManager.CreateAsync(adminRole);
-    }
+//    if (!await roleManager.RoleExistsAsync("Admin"))
+//    {
+//        var adminRole = new IdentityRole("Admin");
+//        await roleManager.CreateAsync(adminRole);
+//    }
 
-    if (!await roleManager.RoleExistsAsync("User"))
-    {
-        var userRole = new IdentityRole("User");
-        await roleManager.CreateAsync(userRole);
-    }
-}
+//    if (!await roleManager.RoleExistsAsync("User"))
+//    {
+//        var userRole = new IdentityRole("User");
+//        await roleManager.CreateAsync(userRole);
+//    }
+//}
 
 app.Configuration.Bind(nameof(jwtSettings), jwtSettings);
 

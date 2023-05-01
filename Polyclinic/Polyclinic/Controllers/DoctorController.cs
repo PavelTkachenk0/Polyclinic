@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Polyclinic.Domain.AmenitieViewModel;
 using Polyclinic.Domain.Models;
 using Polyclinic.Domain.ViewModels;
+using Polyclinic.Service.Implementations;
 using Polyclinic.Service.Interfaces;
 using System.Data;
 
@@ -57,6 +58,12 @@ public class DoctorController : Controller
     public async Task<IActionResult> CreateDoctor([FromBody] DoctorViewModel doctor)
     {
         var responce = await _doctorService.Create(doctor);
+        return Ok();
+    }
+
+    public async Task<IActionResult> UpdateDoctor([FromBody] DoctorViewModel doctor)
+    {
+        var responce = await _doctorService.Edit(doctor.Id, doctor);
         return Ok();
     }
 }

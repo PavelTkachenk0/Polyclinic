@@ -10,4 +10,6 @@ public interface IBaseRepository<T>//дженерик, принимающий к
     Task<List<T>> GetAll(); //получить все данные таблицы(в виде коллекции элементов)
 
     Task<bool> Delete(T entity); //удалить запись из таблицы
+
+    Task<T> Update(T entity);
 }

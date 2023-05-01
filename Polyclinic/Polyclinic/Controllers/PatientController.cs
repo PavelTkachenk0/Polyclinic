@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Polyclinic.Domain.AmenitieViewModel;
 using Polyclinic.Domain.Models;
 using Polyclinic.Domain.ViewModels;
+using Polyclinic.Service.Implementations;
 using Polyclinic.Service.Interfaces;
 
 namespace Polyclinic.Controllers;
@@ -59,6 +61,12 @@ public class PatientController : Controller
     public async Task<IActionResult> CreatePatient([FromBody] PatientViewModel patient)
     {
         var responce = await _patientService.Create(patient);
+        return Ok();
+    }
+
+    public async Task<IActionResult> UpdateAmenitie([FromBody] PatientViewModel patient)
+    {
+        var responce = await _patientService.Edit(patient.Id, patient);
         return Ok();
     }
 }

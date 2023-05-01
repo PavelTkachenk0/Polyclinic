@@ -27,6 +27,13 @@ public class AmenitieRepository : IAmenitieRepository
         return true;
     }
 
+    public async Task<Amenitie> Update(Amenitie entity)
+    {
+        _db.Amenitie.Update(entity);
+        await _db.SaveChangesAsync();
+
+        return entity;
+    }
     public async Task<Amenitie> GetById(int id)
     {
         return await _db.Amenitie.FirstOrDefaultAsync(x => x.Id == id);//возвращает первое найденное значение, удовлетворяющее условию(id)

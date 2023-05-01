@@ -58,4 +58,10 @@ public class AmenitieController : Controller
         var responce = await _amenitieService.Create(amenitie);
         return Ok();
     }
+
+    public async Task<IActionResult> UpdateAmenitie([FromBody] AmenitieViewModel amenitie)
+    {
+        var responce = await _amenitieService.Edit(amenitie.Id, amenitie);
+        return Ok();
+    }
 }

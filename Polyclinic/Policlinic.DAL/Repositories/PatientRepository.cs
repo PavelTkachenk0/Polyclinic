@@ -27,6 +27,14 @@ namespace Polyclinic.DAL.Repositories
             return true;
         }
 
+        public async Task<Patient> Update(Patient entity)
+        {
+            _db.Patient.Update(entity);
+            await _db.SaveChangesAsync();
+
+            return entity;
+        }
+
         public async Task<Patient> GetById(int id)
         {
             return await _db.Patient.FirstOrDefaultAsync(x => x.Id == id);

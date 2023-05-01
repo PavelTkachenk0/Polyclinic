@@ -6,7 +6,7 @@ namespace Polyclinic.Service.Interfaces;
 
 public interface IDoctorService : IService<Doctor, DoctorViewModel>
 {
-    Task<IBaseResponce<Doctor>> GetBySurame(string surname);
+    Task<IBaseResponse<Doctor>> GetBySurame(string surname);
 
-    Task<IBaseResponce<Doctor>> GetBySpecialization(string specialization);
+    Task<IBaseResponse<Doctor>> GetBySpecialization(string specialization);
 }

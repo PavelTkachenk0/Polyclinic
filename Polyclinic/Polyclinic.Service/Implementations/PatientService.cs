@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Polyclinic.DAL.Interfaces;
+using Polyclinic.DAL.Repositories;
 using Polyclinic.Domain.Enum;
 using Polyclinic.Domain.Interfaces;
 using Polyclinic.Domain.Models;
@@ -19,9 +20,9 @@ public class PatientService : IPatientService
     {
         _patientRepository = patientRepository;
     }
-    public async Task<IBaseResponce<Patient>> Create(PatientViewModel patient)
+    public async Task<IBaseResponse<Patient>> Create(PatientViewModel patient)
     {
-        var baseResponce = new BaseResponce<Patient>();
+        var baseResponce = new BaseResponse<Patient>();
         try
         {
             var NewPatient = new Patient()//инициализация 
@@ -37,7 +38,7 @@ public class PatientService : IPatientService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Patient>()
+            return new BaseResponse<Patient>()
             {
                 Description = $"[CreatePatient] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -46,9 +47,44 @@ public class PatientService : IPatientService
         return baseResponce;
     }
 
-    public async Task<IBaseResponce<bool>> Delete(int id)
+    public async Task<IBaseResponse<Patient>> Edit(int id, PatientViewModel patient)
     {
-        var baseResponce = new BaseResponce<bool>();
+        var baseResponse = new BaseResponse<Patient>();
+        try
+        {
+            var NewPatient = await _patientRepository.GetById(id);
+            if (NewPatient == null)
+            {
+                baseResponse.StatusCode = StatusCode.NotFound;
+                baseResponse.Description = "Patient not found";
+                return baseResponse;
+            }
+
+            NewPatient.Name = patient.Name;
+            NewPatient.Surname = patient.Surname;
+            NewPatient.MiddleName = patient.MiddleName;
+            NewPatient.PhoneNumber = patient.PhoneNumber;
+            NewPatient.SNILS = patient.SNILS;
+
+
+            await _patientRepository.Update(NewPatient);
+
+            return baseResponse;
+
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<Patient>()
+            {
+                Description = $"[Edit] : {ex.Message}",
+                StatusCode = StatusCode.InternalServerError
+            };
+        }
+    }
+
+    public async Task<IBaseResponse<bool>> Delete(int id)
+    {
+        var baseResponce = new BaseResponse<bool>();
         try
         {
             var patient = await _patientRepository.GetById(id);
@@ -68,7 +104,7 @@ public class PatientService : IPatientService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<bool>()
+            return new BaseResponse<bool>()
             {
                 Description = $"[DeletePatient] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -76,9 +112,9 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<IBaseResponce<IEnumerable<Patient>>> GetAll()
+    public async Task<IBaseResponse<IEnumerable<Patient>>> GetAll()
     {
-        var baseResponce = new BaseResponce<IEnumerable<Patient>>();
+        var baseResponce = new BaseResponse<IEnumerable<Patient>>();
         try
         {
             var patient = await _patientRepository.GetAll();//получаем все объекты из таблицы 
@@ -99,7 +135,7 @@ public class PatientService : IPatientService
         }
         catch (Exception ex)//обработка ошибки
         {
-            return new BaseResponce<IEnumerable<Patient>>()
+            return new BaseResponse<IEnumerable<Patient>>()
             {
                 Description = $"[GetPatients] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -107,9 +143,9 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<IBaseResponce<Patient>> GetById(int id)
+    public async Task<IBaseResponse<Patient>> GetById(int id)
     {
-        var baseResponce = new BaseResponce<Patient>();
+        var baseResponce = new BaseResponse<Patient>();
         try
         {
             var patient = await _patientRepository.GetById(id);//записываем объект по id
@@ -129,7 +165,7 @@ public class PatientService : IPatientService
         }
         catch (Exception ex) //обработка ошибки
         {
-            return new BaseResponce<Patient>()
+            return new BaseResponse<Patient>()
             {
                 Description = $"[GetPatientById] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -137,9 +173,9 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<IBaseResponce<Patient>> GetByPhoneNumber(string phoneNumber)//получаем пациента по номеру телефона
+    public async Task<IBaseResponse<Patient>> GetByPhoneNumber(string phoneNumber)//получаем пациента по номеру телефона
     {
-        var baseResponce = new BaseResponce<Patient>();
+        var baseResponce = new BaseResponse<Patient>();
         try
         {
             var patient = await _patientRepository.GetByPhoneNumber(phoneNumber);
@@ -159,7 +195,7 @@ public class PatientService : IPatientService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Patient>()
+            return new BaseResponse<Patient>()
             {
                 Description = $"[GetPatientBySpecialization] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -167,9 +203,9 @@ public class PatientService : IPatientService
         }
     }
 
-    public async Task<IBaseResponce<Patient>> GetBySNILS(string snils)//получаем пациента по снилсу
+    public async Task<IBaseResponse<Patient>> GetBySNILS(string snils)//получаем пациента по снилсу
     {
-        var baseResponce = new BaseResponce<Patient>();
+        var baseResponce = new BaseResponse<Patient>();
         try
         {
             var patient = await _patientRepository.GetBySNILS(snils);
@@ -189,7 +225,7 @@ public class PatientService : IPatientService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Patient>()
+            return new BaseResponse<Patient>()
             {
                 Description = $"[GetByName] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
