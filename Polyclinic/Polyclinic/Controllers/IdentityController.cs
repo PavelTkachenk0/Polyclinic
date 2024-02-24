@@ -18,18 +18,46 @@ public class IdentityController : Controller
     [HttpPost("Register")]
     public async Task<IActionResult> Register([FromBody]UserRegistrationRequest request)
     {
-        var authResponce = await _identityService.RegisterAsync(request.Email, request.Password);
-
-        if (!authResponce.Success)
+        if (!ModelState.IsValid)
         {
             return BadRequest(new AuthFailedResponce
             {
-                Errors = authResponce.Errors
+                Errors = ModelState.Values.SelectMany(x => x.Errors.Select(y => y.ErrorMessage))
+        });
+        }
+
+        var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
+
+        if (!authResponse.Success)
+        {
+            return BadRequest(new AuthFailedResponce
+            {
+                Errors = authResponse.Errors
             });
         }
         return Ok(new AuthSuccessResponce
         {
-            Token = authResponce.Token
+            Token = authResponse.Token
+        });
+    }
+
+    [HttpPost("Login")]
+
+    public async Task<IActionResult> Lodin([FromBody]UserLoginRequest request)
+    {
+        var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
+
+        if(!authResponse.Success)
+        {
+            return BadRequest(new AuthFailedResponce
+            {
+                Errors = authResponse.Errors
+            });
+        }
+         
+        return Ok(new AuthSuccessResponce
+        {
+            Token = authResponse.Token
         });
     }
 }
