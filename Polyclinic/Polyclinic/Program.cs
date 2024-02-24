@@ -1,9 +1,17 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Polyclinic.DAL;
 using Polyclinic.DAL.Interfaces;
 using Polyclinic.DAL.Repositories;
+using Polyclinic.Domain.Settings;
 using Polyclinic.Service.Implementations;
 using Polyclinic.Service.Interfaces;
+using System.Configuration;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +23,84 @@ var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connection));
 
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddEntityFrameworkStores<ApplicationDbContext>();
+
+var jwtSettings = new JwtSettings();
+
+builder.Services.AddSingleton(jwtSettings);
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme; ;
+    x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(x =>
+    {
+        x.SaveToken = true;
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret)),
+            ValidateIssuer = false,
+            ValidateAudience = false,
+            RequireExpirationTime = false,
+            ValidateLifetime = true
+        };
+    });
+
+builder.Services.AddSwaggerGen(x =>
+{
+    var security = new Dictionary<string, IEnumerable<string>>
+    {
+        {"Bearer", new string[0]}
+    };
+
+    x.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the bearer scheme",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    x.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                 Reference = new OpenApiReference
+                 {
+                      Type = ReferenceType.SecurityScheme,
+                      Id = "Bearer"
+                 }
+                   
+            },
+            new string[] {}
+        }
+    });
+});
+
+//builder.Services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+builder.Services.AddOptions();
+
+//builder.Configuration["JwtSettings"];
+//var jwtSettings = builder.Configuration.Get<JwtSettings>();
+
 //подключаем необходимые библиотеки в проект
 builder.Services.AddScoped<IAmenitieRepository, AmenitieRepository>();
 builder.Services.AddScoped<IDoctorRepository, DoctorRepository>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+
 builder.Services.AddScoped<IAmenitieService, AmenitieService>();
 builder.Services.AddScoped<IDoctorService, DoctorService>();
-
-builder.Services.AddSwaggerGen();
+builder.Services.AddScoped<IPatientService, PatientService>();
 
 var app = builder.Build();
 
@@ -29,6 +108,8 @@ var app = builder.Build();
 app.UseDeveloperExceptionPage();
 
 app.UseRouting();
+
+app.Configuration.Bind(nameof(jwtSettings), jwtSettings);
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -47,4 +128,4 @@ app.UseEndpoints(options =>
     options.MapDefaultControllerRoute();
 });
 
-app.Run();
+app.Run();  
