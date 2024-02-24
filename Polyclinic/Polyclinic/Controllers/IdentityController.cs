@@ -9,24 +9,24 @@ namespace Polyclinic.Controllers;
 public class IdentityController : Controller
 {
     private readonly IIdentityService _identityService;
-    
+
     public IdentityController(IIdentityService identityService)
     {
         _identityService = identityService;
     }
 
     [HttpPost("Register")]
-    public async Task<IActionResult> Register([FromBody]UserRegistrationRequest request)
+    public async Task<IActionResult> Register([FromBody] UserRegistrationRequest request)
     {
         if (!ModelState.IsValid)
         {
             return BadRequest(new AuthFailedResponce
             {
                 Errors = ModelState.Values.SelectMany(x => x.Errors.Select(y => y.ErrorMessage))
-        });
+            });
         }
 
-        var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
+        var authResponse = await _identityService.RegisterAsync(request.Email, request.Password);
 
         if (!authResponse.Success)
         {
@@ -43,18 +43,18 @@ public class IdentityController : Controller
 
     [HttpPost("Login")]
 
-    public async Task<IActionResult> Lodin([FromBody]UserLoginRequest request)
+    public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
     {
         var authResponse = await _identityService.LoginAsync(request.Email, request.Password);
 
-        if(!authResponse.Success)
+        if (!authResponse.Success)
         {
             return BadRequest(new AuthFailedResponce
             {
                 Errors = authResponse.Errors
             });
         }
-         
+
         return Ok(new AuthSuccessResponce
         {
             Token = authResponse.Token

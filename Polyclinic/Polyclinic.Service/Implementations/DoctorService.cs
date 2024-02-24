@@ -7,6 +7,7 @@ using Polyclinic.Domain.Models;
 using Polyclinic.Domain.Responce;
 using Polyclinic.Domain.ViewModels;
 using Polyclinic.Service.Interfaces;
+using System.Numerics;
 
 namespace Polyclinic.Service.Implementations;
 
@@ -19,9 +20,9 @@ public class DoctorService : IDoctorService
     {
         _doctorRepository = doctorRepository;
     }
-    public async Task<IBaseResponce<Doctor>> Create(DoctorViewModel doctor)
+    public async Task<IBaseResponse<Doctor>> Create(DoctorViewModel doctor)
     {
-        var baseResponce = new BaseResponce<Doctor>();
+        var baseResponce = new BaseResponse<Doctor>();
         try
         {
             var NewDoctor = new Doctor()//инициализация 
@@ -36,7 +37,7 @@ public class DoctorService : IDoctorService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Doctor>()
+            return new BaseResponse<Doctor>()
             {
                 Description = $"[CreateDoctor] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -45,9 +46,43 @@ public class DoctorService : IDoctorService
         return baseResponce;
     }
 
-    public async Task<IBaseResponce<bool>> Delete(int id)
+    public async Task<IBaseResponse<Doctor>> Edit(int id, DoctorViewModel doctor)
     {
-        var baseResponce = new BaseResponce<bool>();
+        var baseResponse = new BaseResponse<Doctor>();
+        try
+        {
+            var NewDoctor = await _doctorRepository.GetById(id);
+            if (NewDoctor == null)
+            {
+                baseResponse.StatusCode = StatusCode.NotFound;
+                baseResponse.Description = "Doctor not found";
+                return baseResponse;
+            }
+
+            NewDoctor.Name = doctor.Name;
+            NewDoctor.Surname = doctor.Surname;
+            NewDoctor.MiddleName = doctor.MiddleName;
+            NewDoctor.Specialization = doctor.Specialization;
+
+
+            await _doctorRepository.Update(NewDoctor);
+
+            return baseResponse;
+
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<Doctor>()
+            {
+                Description = $"[Edit] : {ex.Message}",
+                StatusCode = StatusCode.InternalServerError
+            };
+        }
+    }
+
+    public async Task<IBaseResponse<bool>> Delete(int id)
+    {
+        var baseResponce = new BaseResponse<bool>();
         try
         {
             var doctor = await _doctorRepository.GetById(id);
@@ -67,7 +102,7 @@ public class DoctorService : IDoctorService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<bool>()
+            return new BaseResponse<bool>()
             {
                 Description = $"[DeleteDoctor] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -75,9 +110,9 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<IBaseResponce<IEnumerable<Doctor>>> GetAll()
+    public async Task<IBaseResponse<IEnumerable<Doctor>>> GetAll()
     {
-        var baseResponce = new BaseResponce<IEnumerable<Doctor>>();
+        var baseResponce = new BaseResponse<IEnumerable<Doctor>>();
         try
         {
             var doctors = await _doctorRepository.GetAll();//получаем все объекты из таблицы 
@@ -98,7 +133,7 @@ public class DoctorService : IDoctorService
         }
         catch (Exception ex)//обработка ошибки
         {
-            return new BaseResponce<IEnumerable<Doctor>>()
+            return new BaseResponse<IEnumerable<Doctor>>()
             {
                 Description = $"[GetDoctors] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -106,9 +141,9 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<IBaseResponce<Doctor>> GetById(int id)
+    public async Task<IBaseResponse<Doctor>> GetById(int id)
     {
-        var baseResponce = new BaseResponce<Doctor>();
+        var baseResponce = new BaseResponse<Doctor>();
         try
         {
             var doctor = await _doctorRepository.GetById(id);//записываем объект по id
@@ -128,7 +163,7 @@ public class DoctorService : IDoctorService
         }
         catch (Exception ex) //обработка ошибки
         {
-            return new BaseResponce<Doctor>()
+            return new BaseResponse<Doctor>()
             {
                 Description = $"[GetDoctorById] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -136,9 +171,9 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<IBaseResponce<Doctor>> GetBySpecialization(string specialization)
+    public async Task<IBaseResponse<Doctor>> GetBySpecialization(string specialization)//получаем врача по специальности
     {
-        var baseResponce = new BaseResponce<Doctor>();
+        var baseResponce = new BaseResponse<Doctor>();
         try
         {
             var doctor = await _doctorRepository.GetBySpecialization(specialization);
@@ -158,7 +193,7 @@ public class DoctorService : IDoctorService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Doctor>()
+            return new BaseResponse<Doctor>()
             {
                 Description = $"[GetDoctorBySpecialization] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -166,9 +201,9 @@ public class DoctorService : IDoctorService
         }
     }
 
-    public async Task<IBaseResponce<Doctor>> GetBySurame(string surname)
+    public async Task<IBaseResponse<Doctor>> GetBySurame(string surname)//получаем врача по фамилии
     {
-        var baseResponce = new BaseResponce<Doctor>();
+        var baseResponce = new BaseResponse<Doctor>();
         try
         {
             var doctor = await _doctorRepository.GetBySurname(surname);
@@ -188,7 +223,7 @@ public class DoctorService : IDoctorService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Doctor>()
+            return new BaseResponse<Doctor>()
             {
                 Description = $"[GetByName] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError

@@ -6,6 +6,6 @@ namespace Polyclinic.Service.Interfaces;
 //слой отвечает за получение и обработку данных об услугах из БД
 public interface IAmenitieService : IService<Amenitie, AmenitieViewModel>
 {
-    Task<IBaseResponce<Amenitie>> GetByName(string name);
+    Task<IBaseResponse<Amenitie>> GetByName(string name);
 
 }

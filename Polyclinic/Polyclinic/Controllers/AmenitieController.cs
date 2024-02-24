@@ -1,22 +1,27 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Polyclinic.Domain.AmenitieViewModel;
 using Polyclinic.Domain.Models;
 using Polyclinic.Service.Interfaces;
+using System.Data;
 //контроллер услуг
 namespace Polyclinic.Controllers;
+
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin, User")]
 
 [Route("api/[controller]")]
 public class AmenitieController : Controller
 {
     private readonly IAmenitieService _amenitieService;
 
-    public AmenitieController(IAmenitieService amenitieService)//конструктор класса
+    public AmenitieController(IAmenitieService amenitieService)
     {
         _amenitieService = amenitieService;
     }
     
     [HttpGet("GetAllAmenities")]
-    public async Task<IEnumerable<Amenitie>> GetAmenities() //получение всех данных
+    public async Task<IEnumerable<Amenitie>> GetAmenities() 
     {   
         var response = await _amenitieService.GetAll();
         return response.Data;
@@ -30,26 +35,33 @@ public class AmenitieController : Controller
     }
 
     [HttpGet("GetAmenitieById")]
+    [Authorize(Roles = "Admin")]
     public async Task<Amenitie> GetAmenitieById(int id)
     {
         var response = await _amenitieService.GetById(id);
         return response.Data;
     }
 
-    //[Authorize(Roles = "Admin")]
     [HttpDelete("DeleteAmenitie")]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteAmenitie(int id)
     {
         var response = await _amenitieService.Delete(id);
         return Ok();
     }
 
-    //[Authorize(Roles = "Admin")]
     [HttpPost("CreateAmenitie")]
+    [Authorize(Roles = "Admin")]
 
     public async Task<IActionResult> CreateAmenitie([FromBody]AmenitieViewModel amenitie)
     {
         var responce = await _amenitieService.Create(amenitie);
+        return Ok();
+    }
+
+    public async Task<IActionResult> UpdateAmenitie([FromBody] AmenitieViewModel amenitie)
+    {
+        var responce = await _amenitieService.Edit(amenitie.Id, amenitie);
         return Ok();
     }
 }

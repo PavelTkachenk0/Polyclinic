@@ -26,6 +26,14 @@ public class DoctorRepository : IDoctorRepository
         return true;
     }
 
+    public async Task<Doctor> Update(Doctor entity)
+    {
+        _db.Doctor.Update(entity);
+        await _db.SaveChangesAsync();
+
+        return entity;
+    }
+
     public async Task<Doctor> GetById(int id)
     {
         return await _db.Doctor.FirstOrDefaultAsync(x => x.Id == id);

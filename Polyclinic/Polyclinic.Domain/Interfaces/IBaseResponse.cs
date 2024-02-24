@@ -1,8 +1,8 @@
 ﻿using Polyclinic.Domain.Enum;
 
 namespace Polyclinic.Domain.Interfaces;
-
-public interface IBaseResponce<T>
+//интерфейс класса BaseResponce(см.Domain.Responce.BaseResponce)
+public interface IBaseResponse<T>
 {
     StatusCode StatusCode { get; }
     T Data { get; set; }

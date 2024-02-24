@@ -17,9 +17,9 @@ public class AmenitieService : IAmenitieService
         _amenitieRepository = amenitieRepository;
     }
 
-    public async Task<IBaseResponce<Amenitie>> Create(AmenitieViewModel amenitie)
+    public async Task<IBaseResponse<Amenitie>> Create(AmenitieViewModel amenitie)
     {
-    var baseResponce = new BaseResponce<Amenitie>(); 
+    var baseResponce = new BaseResponse<Amenitie>(); 
         try
         {
             var NewAmenitie = new Amenitie()//инициализация услуги
@@ -34,7 +34,7 @@ public class AmenitieService : IAmenitieService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Amenitie>()
+            return new BaseResponse<Amenitie>()
             {
                 Description = $"[CreateAmenitie] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -43,9 +43,44 @@ public class AmenitieService : IAmenitieService
         return baseResponce;
     }
 
-    public async Task<IBaseResponce<Amenitie>> GetById(int id)//получить услугу по id
+    public async Task<IBaseResponse<Amenitie>> Edit(int id, AmenitieViewModel amenitie)
     {
-        var baseResponce = new BaseResponce<Amenitie>();
+        var baseResponse = new BaseResponse<Amenitie>();
+        try
+        {
+            var NewAmenitie = await _amenitieRepository.GetById(id);
+            if (NewAmenitie == null)
+            {
+                baseResponse.StatusCode = StatusCode.NotFound;
+                baseResponse.Description = "Amenitie not found";
+                return baseResponse;
+            }
+
+            NewAmenitie.Name = amenitie.Name;
+            NewAmenitie.Description = amenitie.Description;
+            NewAmenitie.StartOfReception = amenitie.StartOfReception;
+            NewAmenitie.EndOfReception = amenitie.EndOfReception;
+           
+
+            await _amenitieRepository.Update(NewAmenitie);
+
+            return baseResponse;
+
+        }
+        catch (Exception ex)
+        {
+            return new BaseResponse<Amenitie>()
+            {
+                Description = $"[Edit] : {ex.Message}",
+                StatusCode = StatusCode.InternalServerError
+            };
+        }
+    }
+
+
+    public async Task<IBaseResponse<Amenitie>> GetById(int id)//получить услугу по id
+    {
+        var baseResponce = new BaseResponse<Amenitie>();
         try
         {
             var amenitie = await _amenitieRepository.GetById(id);//записываем объект по id
@@ -65,7 +100,7 @@ public class AmenitieService : IAmenitieService
         }
         catch(Exception ex) //обработка ошибки
         {
-            return new BaseResponce<Amenitie>()
+            return new BaseResponse<Amenitie>()
             {
                 Description = $"[GetAmenitieById] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -73,9 +108,9 @@ public class AmenitieService : IAmenitieService
         }
     }
 
-    public async Task<IBaseResponce<Amenitie>> GetByName(string name)//получить услугу по имени
+    public async Task<IBaseResponse<Amenitie>> GetByName(string name)//получить услугу по имени
     {
-        var baseResponce = new BaseResponce<Amenitie>();
+        var baseResponce = new BaseResponse<Amenitie>();
         try
         {
             var amenitie = await _amenitieRepository.GetByName(name);
@@ -95,16 +130,16 @@ public class AmenitieService : IAmenitieService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<Amenitie>()
+            return new BaseResponse<Amenitie>()
             {
                 Description = $"[GetAmenitieByName] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
             };
         }
     }
-    public async Task<IBaseResponce<IEnumerable<Amenitie>>> GetAll()//получить список услуг 
+    public async Task<IBaseResponse<IEnumerable<Amenitie>>> GetAll()//получить список услуг 
     {
-        var baseResponce = new BaseResponce<IEnumerable<Amenitie>>();
+        var baseResponce = new BaseResponse<IEnumerable<Amenitie>>();
         try
         {
             var amenities = await _amenitieRepository.GetAll();//получаем все объекты из таблицы 
@@ -125,7 +160,7 @@ public class AmenitieService : IAmenitieService
         }
         catch (Exception ex)//обработка ошибки
         {
-            return new BaseResponce<IEnumerable<Amenitie>>()
+            return new BaseResponse<IEnumerable<Amenitie>>()
             {
                 Description = $"[GetAmenities] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError
@@ -133,9 +168,9 @@ public class AmenitieService : IAmenitieService
         }
     }
 
-    public async Task<IBaseResponce<bool>> Delete(int id)//удаление услуги 
+    public async Task<IBaseResponse<bool>> Delete(int id)//удаление услуги 
     {
-        var baseResponce = new BaseResponce<bool>();
+        var baseResponce = new BaseResponse<bool>();
         try
         {
             var amenitie = await _amenitieRepository.GetById(id);
@@ -155,7 +190,7 @@ public class AmenitieService : IAmenitieService
         }
         catch (Exception ex)
         {
-            return new BaseResponce<bool>()
+            return new BaseResponse<bool>()
             {
                 Description = $"[DeleteAmenitie] : {ex.Message}",
                 StatusCode = StatusCode.InternalServerError

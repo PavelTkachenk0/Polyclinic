@@ -1,5 +1,5 @@
 ﻿namespace Polyclinic.Domain.Models;
-
+//описание модели доктора
 public class Doctor
 {
     public int Id { get; set; }
